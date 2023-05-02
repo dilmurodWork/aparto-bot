@@ -48,9 +48,9 @@ async def choose_district(message: types.Message):
 async def choose_property_type(message: types.Message):
     property_type = message.text
     filters['type'] = property_type
-    if lang == rus and property_type in ['Коммерция', 'Квартира']:
+    if lang == rus and property_type in ['Коммерция', 'Квартира', 'Новостройка']:
         await message.reply(f"Выберите количкество комнат ({property_type}):", reply_markup=kvart_rooms_kb_ru)
-    elif lang == uzb and property_type in ['Tijorat binosi', 'Xonadon']:
+    elif lang == uzb and property_type in ['Tijorat binosi', 'Xonadon', 'Yangi turar joy']:
         await message.reply(f"Xonalar sonini tanglang ({property_type}):", reply_markup=kvart_rooms_kb_uz)
     elif lang == rus and property_type == 'Дом':
         await message.reply(f"Выберите площадь дома ({property_type}):", reply_markup=dom_type_kb_ru)
@@ -84,10 +84,9 @@ async def choose_price_house(message: types.Message):
 async def search_handler(message: types.Message):
     filters['price'] = message.text
     await message.reply(f"Search for: {filters}")
+    await bot.send_message(2039384031, f"Search for: {filters}")
  
     
-
-
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start', 'help'])
     dp.register_message_handler(start, Text(contains='⚙️'))
@@ -99,8 +98,8 @@ def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(choose_district, lambda message: message.text in list(districts.values())+
                                   list(districts.keys()))
     dp.register_message_handler(choose_property_type, 
-                                Text('Квартира') | Text('Коммерция') | 
-                                Text('Дом') | Text('Xonadon') | Text('Tijorat binosi') | Text('Hovli'))    
+                                Text('Квартира') | Text('Коммерция') | Text('Новостройка')|
+                                Text('Дом') | Text('Xonadon') | Text('Tijorat binosi') | Text('Hovli') | Text('Yangi turar joy'))    
 
     dp.register_message_handler(choose_price_room, lambda message: message.text in '12345678910')
     dp.register_message_handler(choose_price_house, lambda message: message.text in cotx_list)
