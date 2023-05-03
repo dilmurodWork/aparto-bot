@@ -1,18 +1,50 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 districts = {
-    'Бектемирский район' : 'Bektemir tumani', 
-    'Чиланзарский район': 'Chilonzor tumani', 
-    'Мирабадский район' :'Mirobod tumani', 
-    'Мирзо Улугбекский район' : 'Mirzo Ulug\'bek tumani', 
-    'Алмазарский район' : 'Olmazor tumani', 
-    'Сергелийский район' : 'Sergeli tumani', 
-    'Шайхонтохурский район' : 'Shayhontohur tumani', 
-    'Учтепинский район' : 'Uchtepa tumani', 
-    'Яккасарайский район' : 'Yakkasaroy tumani', 
-    'Яшнаабадский район' : 'Yashnaobod tumani', 
-    'Юнусабадский район' : 'Yunusobod tumani', 
-    'Ташкентская обл.' : 'Toshkent vil.'
+'Bektemir'        :     'Бектемирский', 
+'Chilonzor'       :     'Чиланзарский', 
+'Mirobod'         :     'Мирабадский', 
+'Mirzo Ulug\'bek' :     'Мирзо Улугбекский', 
+'Olmazor'         :     'Алмазарский', 
+'Sergeli'         :     'Сергелийский', 
+'Shayhontohur'    :     'Шайхонтохурский', 
+'Uchtepa'         :     'Учтепинский', 
+'Yakkasaroy'      :     'Яккасарайский', 
+'Yashnaobod'      :     'Яшнаабадский', 
+'Yunusobod'       :     'Юнусабадский', 
+'Toshkent vil.'   :     'Ташкентская обл.'
+}
+
+translator = {
+    'Sotuv'          :    'Продажа',
+    'Ijara'          :   'Аренда',
+    'Xonadon'        :   'Квартира',
+    'Hovli'          :   'Дом',
+    'Tijorat binosi' :'Коммерция', 
+    'Yangi turar joy':'Новостройка',
+    'price_rent_list': {
+    '1.000 $ - 2.000 $':   [1_000,2_000],
+    '2.001 $ - 3.000 $':   [2_001,3_000], 
+    '3.001 $ - 4.000 $':   [3_001, 4_000], 
+    '4.001 $ - 5.000 $':   [4_001,5_000], 
+    '5.001 $ - 6.000 $':   [5_001,6_000], 
+    '6.001 $ - 7.000 $':   [6_001,7_000], 
+    '7.001 $ - 8.000 $':   [7_001,8_000], 
+    '8.001 $ - 9.000 $':   [8_001,9_000], 
+    '9.001 $ - 10.000 $':  [9_001,10_000], 
+    '10.001 $ +': [10_001],
+    },
+    'price_buy_list': {
+    '50.000 $ - 70.000 $' : [50_000, 70_000],
+    '70.001 $ - 90.000 $' : [70_001, 90_000], 
+    '90.001 $ - 110.000 $': [90_001, 110_000], 
+    '110.001 $ - 150.000 $': [110_001, 150_000], 
+    '150.001 $ - 170.000 $': [150_001, 170_000], 
+    '170.001 $ - 190.000 $': [170_001, 190_000], 
+    '190.001 $ - 210.000 $': [190_001, 210_000], 
+    '210.001 $ - 250.000 $': [210_001, 250_000], 
+    '250.001 $ +': [250_001] 
+    }
 }
 
 back_uz = KeyboardButton('🔙 Ortga')
@@ -41,8 +73,8 @@ category_kb_uz.row(cat2_uz, cat1_uz).add(back)
 district_kb_ru = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 district_kb_uz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 for i in districts:
-    district_kb_ru.add(i)
-    district_kb_uz.add(districts[i])
+    district_kb_ru.add(districts[i])
+    district_kb_uz.add(i)
 
 district_kb_ru.add(back_ru)
 district_kb_uz.add(back_uz)
@@ -82,13 +114,10 @@ for i in cotx_list:
 dom_type_kb_ru.insert(back_ru)
 dom_type_kb_uz.insert(back_uz)
 
-
-price_rent_list = ['1000 $ - 2000 $','2001 $ - 3000 $ ', '3001 $ - 4000 $', '4001 $ - 5000 $', '5001 $ +']
-
 price_aren_kb_ru = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 price_aren_kb_uz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 
-for i in price_rent_list:
+for i in translator['price_rent_list']:
     price_aren_kb_ru.insert(i)
     price_aren_kb_uz.insert(i)
 
@@ -96,12 +125,10 @@ price_aren_kb_ru.insert(back_ru)
 price_aren_kb_uz.insert(back_uz)
 
 
-price_buy_list = ['50000$ - 70000 $','70001 $ - 90000 $', '90001 $ - 110000 $', '110001 $ - 150000 $', '150001 $ +']
-
 price_buy_kb_ru = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 price_buy_kb_uz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 
-for i in price_buy_list:
+for i in translator['price_buy_list']:
     price_buy_kb_ru.insert(i)
     price_buy_kb_uz.insert(i)
 
