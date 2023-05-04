@@ -2,8 +2,8 @@ from aiogram import types, Dispatcher
 from aiogram.dispatcher.filters import Text
 from Keyboards.all_kb import *
 from settings import bot
-# from ChannelMessages import main
-
+import json
+import re
 filters = {}
 lang = ''
 rus = '🇷🇺 Русский'
@@ -22,23 +22,28 @@ async def start(message: types.Message):
 
 async def choose_language(message: types.Message):
     global lang
-    lang = message.text 
-    if lang == '🔙 Назад' : lang = rus
+    if not '🔄' in message.text: 
+        lang = message.text 
     if lang == rus:
         await message.reply(f"Выберите категорию ({lang}):", reply_markup= category_kb_ru)
     else:
         await message.reply(f"Kategoriyani tanlang ({lang}):", reply_markup= category_kb_uz)
 
 async def choose_category(message: types.Message):
+    global lang
+
     try:
         filters['category'] = translator[message.text]
     except KeyError:
-        filters['category'] = message.text
+        if   message.text != '🔙 Назад' :
+            filters['category'] = message.text
+        else:
+            lang = rus
 
     if lang == rus:
-        await message.reply(f"Выберите район ({message.text}):", reply_markup=district_kb_ru)
+        await message.reply(f"Выберите район ({filters['category']}):", reply_markup=district_kb_ru)
     else:
-        await message.reply(f"Tumanni tanlang ({message.text}):", reply_markup=district_kb_uz)
+        await message.reply(f"Tumanni tanlang ({filters['category']}):", reply_markup=district_kb_uz)
 
 
 async def choose_district(message: types.Message):
@@ -94,15 +99,20 @@ async def choose_price_house(message: types.Message):
         await message.reply(f"Выберите цену ({area}):", reply_markup=price_buy_kb_ru)
     else:
         await message.reply(f"Narxni tanlang ({area}):", reply_markup=price_buy_kb_uz)
-
+        
+ 
 async def search_handler(message: types.Message):
     try:
         filters['price'] = translator['price_buy_list'][message.text]
     except KeyError:
         filters['price'] = translator['price_rent_list'][message.text]
-    await message.reply(f"Search for: {filters}")
+    await message.reply(f"Search for: {filters}", reply_markup=go_back_ru if lang == rus else go_back_uz)
     await bot.send_message(2039384031, f"{message.from_user.username} searching for: \n{filters}")
- 
+    msg_ids = get_filtred_msgs_id(filters)
+    print(msg_ids)
+    for i in msg_ids:
+        await bot.forward_message(message.from_user.id, '-1001980218719', message_id = i)    
+
     
 def register_handlers_client(dp: Dispatcher):
     dp.register_message_handler(start, commands=['start', 'help'])
@@ -123,4 +133,26 @@ def register_handlers_client(dp: Dispatcher):
     
     dp.register_message_handler(search_handler, lambda message: message.text in translator['price_rent_list'])
     dp.register_message_handler(search_handler, lambda message: message.text in translator['price_buy_list'])
-    dp.register_message_handler(choose_language, Text(contains='🔙'))
+    dp.register_message_handler(choose_category, Text(contains='🔙'))
+    dp.register_message_handler(choose_language, Text(contains='🔄'))
+
+
+def find_hashtags(message):
+    hashtags = re.findall(r'#\w+', message)
+    return hashtags
+
+
+def get_filtred_msgs_id(filters):
+    msg_id = []
+    with open('channel_messages.json', 'r') as infile:
+        all_msgs = json.load(infile)
+        for msg in all_msgs:
+            hashtags = find_hashtags(msg['message'])
+            for hsh in hashtags[:3]:
+                if not hsh[1:].capitalize() in filters.values():
+                    break
+            msg_id.append(msg['id']) 
+
+        return list(set(msg_id))
+
+

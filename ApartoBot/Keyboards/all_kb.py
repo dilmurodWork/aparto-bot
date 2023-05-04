@@ -1,22 +1,23 @@
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton
 
 districts = {
-'Bektemir'        :     'Бектемирский', 
-'Chilonzor'       :     'Чиланзарский', 
-'Mirobod'         :     'Мирабадский', 
-'Mirzo Ulug\'bek' :     'Мирзо Улугбекский', 
-'Olmazor'         :     'Алмазарский', 
-'Sergeli'         :     'Сергелийский', 
-'Shayhontohur'    :     'Шайхонтохурский', 
-'Uchtepa'         :     'Учтепинский', 
-'Yakkasaroy'      :     'Яккасарайский', 
-'Yashnaobod'      :     'Яшнаабадский', 
-'Yunusobod'       :     'Юнусабадский', 
-'Toshkent vil.'   :     'Ташкентская обл.'
+'Mirobod'          :     'Мирабад',
+'Yakkasaroy'       :     'Яккасарай',
+'Shayhontohur'     :     'Шайхантахур',
+'Mirzo Ulug\'bek'  :     'МирзоУлугбек', 
+'Yashnobod'        :     'Яшнобод',
+'Yunusobod'        :     'Юнусабад',
+'Chilonzor'        :     'Чиланзар',
+'Uchtepa'          :     'Учтепа',
+'Olmazor'          :     'Олмазор',
+'Sergeli'          :     'Сергели',
+'Bektemir'         :     'Бектемир',
+'Toshkent vil.'    :     'Тошобл',
 }
 
+
 translator = {
-    'Sotuv'          :    'Продажа',
+    'Sotuv'          :   'Продажа',
     'Ijara'          :   'Аренда',
     'Xonadon'        :   'Квартира',
     'Hovli'          :   'Дом',
@@ -49,6 +50,8 @@ translator = {
 
 back_uz = KeyboardButton('🔙 Ortga')
 back_ru = KeyboardButton('🔙 Назад')
+back_menu_ru = KeyboardButton('🔄 Менять категорию')
+back_menu_uz = KeyboardButton('🔄 Kategoriyani o\'zgartirish')
 
 langs_kb = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 ru = KeyboardButton('🇷🇺 Русский')
@@ -76,8 +79,8 @@ for i in districts:
     district_kb_ru.add(districts[i])
     district_kb_uz.add(i)
 
-district_kb_ru.add(back_ru)
-district_kb_uz.add(back_uz)
+district_kb_ru.add(back_menu_ru)
+district_kb_uz.add(back_menu_uz)
 
 type_kb_ru = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
 type_kb_uz = ReplyKeyboardMarkup(row_width=2, resize_keyboard=True)
@@ -134,3 +137,6 @@ for i in translator['price_buy_list']:
 
 price_buy_kb_ru.insert(back_ru)
 price_buy_kb_uz.insert(back_uz)
+
+go_back_ru = ReplyKeyboardMarkup(resize_keyboard=True).add(back_ru)
+go_back_uz = ReplyKeyboardMarkup(resize_keyboard=True).add(back_uz)
