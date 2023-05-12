@@ -24,7 +24,7 @@ filters = {}
 
 
 async def start(message: types.Message, state: FSMContext):
-    text = 'Xush kelibsiz, tilni tanlang.\nДобро пожаловать выберите язык.\nWelcome choose language.'
+    text = '🇺🇿 Xush kelibsiz, tilni tanlang.\n🇷🇺 Добро пожаловать выберите язык.\n🇬🇧 Welcome choose language.'
     await state.finish()
     try:
         await bot.send_message(message.from_user.id, text, reply_markup=langs_kb)

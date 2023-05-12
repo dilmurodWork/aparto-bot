@@ -127,7 +127,7 @@ for i in range(1, 11):
 
 kvart_rooms_kb_ru.insert(back_ru)
 kvart_rooms_kb_uz.insert(back_uz)
-kvart_rooms_kb_uz.insert(back_eng)
+kvart_rooms_kb_en.insert(back_eng)
 
 cotx_list = ['1-3', '3-5', '5-7', '7-9', '9+']
 
