@@ -19,18 +19,19 @@ class Form(StatesGroup):
 
 rus = '🇷🇺 Русский'
 uzb = '🇺🇿 O\'zbekcha'
+eng = '🇬🇧 English'
 filters = {}
 
 
 async def start(message: types.Message, state: FSMContext):
-    text = 'Xush kelibsiz, tilni tanlang.\nДобро пожаловать выберите язык.'
+    text = 'Xush kelibsiz, tilni tanlang.\nДобро пожаловать выберите язык.\nWelcome choose language.'
     await state.finish()
     try:
         await bot.send_message(message.from_user.id, text, reply_markup=langs_kb)
         await message.delete()
         await Form.category.set()
     except:
-        await message.reply('Переход в ЛС, напишите ему \ Shaxsiy habarlarga yozing:\nhttps://t.me/dnm_test_bot')
+        await message.reply('Переход в ЛС, напишите ему \ Shaxsiy habarlarga yozing \ Go to PM, write to him:\nhttps://t.me/dnm_test_bot')
 
 
 async def choose_category(message: types.Message, state: FSMContext):
@@ -42,8 +43,10 @@ async def choose_category(message: types.Message, state: FSMContext):
 
         if data['lang'] == rus:
             await message.reply(f"Выберите категорию ({data['lang']}):", reply_markup=category_kb_ru)
+        elif data['lang'] == eng:
+            await message.reply(f"Select a category ({data['lang']}):", reply_markup=category_kb_en)
         else:
-            await message.reply(f"Выберите категорию ({data['lang']}):", reply_markup=category_kb_uz)
+            await message.reply(f"Kategoriyani tanlang ({data['lang']}):", reply_markup=category_kb_uz)
 
         await Form.next()
 
@@ -61,6 +64,8 @@ async def choose_district(message: types.Message, state: FSMContext):
 
         if data['lang'] == rus:
             await message.reply(f"Выберите район ({data['category']}):", reply_markup=district_kb_ru)
+        elif data['lang'] == eng:
+            await message.reply(f"Select a district ({data['category']}):", reply_markup=district_kb_en)
         else:
             await message.reply(f"Tumanni tanlang ({data['category']}):", reply_markup=district_kb_uz)
 
@@ -76,6 +81,8 @@ async def choose_type(message: types.Message, state: FSMContext):
 
         if data['lang'] == rus:
             await message.reply(f"Выберите тип недвижимости ({data['district']}):", reply_markup=type_kb_ru)
+        elif data['lang'] == eng:
+            await message.reply(f"Choose a type ({data['district']}):", reply_markup=type_kb_en)
         else:
             await message.reply(f"Mulk turini tanlang ({data['district']}):", reply_markup=type_kb_uz)
 
@@ -90,16 +97,20 @@ async def choose_area(message: types.Message, state: FSMContext):
             data['type'] = message.text
 
         if data['type'] in ['Коммерция', 'Квартира', 'Новостройка']:
-            await message.reply(f"Выберите количкество комнат ({data['type']}):", reply_markup=kvart_rooms_kb_ru)
-
-        elif data['type'] in ['Tijorat binosi', 'Xonadon', 'Yangi turar joy']:
-            await message.reply(f"Xonalar sonini tanglang ({data['type']}):", reply_markup=kvart_rooms_kb_uz)
+            if data['lang'] == rus:
+                await message.reply(f"Выберите количкество комнат ({data['type']}):", reply_markup=kvart_rooms_kb_ru)
+            elif data['lang'] == uzb:
+                await message.reply(f"Xonalar sonini tanglang ({data['type']}):", reply_markup=kvart_rooms_kb_uz)
+            else:
+                await message.reply(f"Choose number of rooms  ({data['type']}):", reply_markup=kvart_rooms_kb_en)
 
         elif data['type'] == 'Дом':
-            await message.reply(f"Выберите площадь дома ({data['type']}):", reply_markup=dom_type_kb_ru)
-
-        else:
-            await message.reply(f"Uy maidonini tanglang ({data['type']}):", reply_markup=dom_type_kb_uz)
+            if data['lang'] == rus:
+                await message.reply(f"Выберите площадь дома ({data['type']}):", reply_markup=dom_type_kb_ru)
+            elif data['lang'] == eng:
+                await message.reply(f"Select the area ({data['type']}):", reply_markup=dom_type_kb_en)
+            else:
+                await message.reply(f"Uy maidonini tanglang ({data['type']}):", reply_markup=dom_type_kb_uz)
 
     await Form.next()
 
@@ -112,13 +123,20 @@ async def choose_price(message: types.Message, state: FSMContext):
             data['area'] = message.text
 
         if data['category'] == 'Аренда':
-            await message.reply(f"Выберите цену ({data['area']}):", reply_markup=price_aren_kb_ru)
-        elif data['category'] == 'Ijara':
-            await message.reply(f"Narxni tanlang ({data['area']}):", reply_markup=price_aren_kb_uz)
+            if data['lang'] == rus:
+                await message.reply(f"Выберите цену ({data['area']}):", reply_markup=price_aren_kb_ru)
+            elif data['lang'] == uzb:
+                await message.reply(f"Narxni tanlang ({data['area']}):", reply_markup=price_aren_kb_uz)
+            else:
+                await message.reply(f"Choose a price ({data['area']}):", reply_markup=price_aren_kb_en)
+
         elif data['category'] == 'Продажа':
-            await message.reply(f"Выберите цену ({data['area']}):", reply_markup=price_buy_kb_ru)
-        else:
-            await message.reply(f"Narxni tanlang ({data['area']}):", reply_markup=price_buy_kb_uz)
+            if data['lang'] == rus:
+                await message.reply(f"Выберите цену ({data['area']}):", reply_markup=price_buy_kb_ru)
+            elif data['lang'] == uzb:
+                await message.reply(f"Narxni tanlang ({data['area']}):", reply_markup=price_buy_kb_uz)
+            else:
+                await message.reply(f"Choose a price ({data['area']}):", reply_markup=price_buy_kb_en)
 
         await Form.next()
 
@@ -141,8 +159,8 @@ def register_handlers_view(dp: Dispatcher):
     dp.register_message_handler(start, Text(contains='⚙️'), state='*')
     dp.register_message_handler(choose_category, state=Form.category)
 
-    dp.register_message_handler(choose_district, Text(equals='Аренда') | Text(equals='Продажа') |
-                                Text('Sotuv') | Text('Ijara'), state=Form.district)
+    dp.register_message_handler(choose_district, Text('Аренда') | Text('Продажа') |
+                                Text('Sotuv') | Text('Ijara') | Text('Sale') | Text('Rent'), state=Form.district)
 
     dp.register_message_handler(choose_type,
                                 lambda message: message.text in list(districts.values()) + list(districts.keys()),
@@ -150,8 +168,9 @@ def register_handlers_view(dp: Dispatcher):
 
     dp.register_message_handler(choose_area,
                                 Text('Квартира') | Text('Коммерция') | Text('Новостройка') |
-                                Text('Дом') | Text('Xonadon') | Text('Tijorat binosi') | Text('Hovli') | Text(
-                                    'Yangi turar joy'),
+                                Text('Дом') | Text('Xonadon') | Text('Tijorat binosi') | Text('Hovli') |
+                                Text('Yangi turar joy') | Text('Apartment') |
+                                Text('House') | Text('Commerce') | Text('New building'),
                                 state=Form.area)
 
     dp.register_message_handler(choose_price,
